@@ -11,7 +11,7 @@ const EnvanterScreen = () => {
 
   useEffect(() => {
     axios
-      .get("http://192.168.1.147:5001/envanterler") // ← Kendi IP adresine göre güncelledim
+      .get("http://10.33.10.55:5001/envanterler")
       .then((response) => {
         setEnvanterler(response.data);
         setLoading(false);
@@ -33,7 +33,7 @@ const EnvanterScreen = () => {
           style: "destructive",
           onPress: () => {
             axios
-              .delete(`http://192.168.1.147:5001/envanter-sil/${id}`)
+              .delete(`http://10.33.10.55:5001/envanter-sil/${id}`)
               .then(() => {
                 setEnvanterler((prev) => prev.filter((item) => item._id !== id));
               })
@@ -61,10 +61,21 @@ const EnvanterScreen = () => {
             <Text style={styles.itemText}>🔢 Numara: {item.numara}</Text>
             <Text style={styles.itemText}>📦 Toplam Raf: {item.toplamRaf}</Text>
 
-            {/* Güncelleme Butonu */}
             <Button
               title="Düzenle"
-              onPress={() => navigation.navigate('EditEnvanter', { ...item })}
+              onPress={() => navigation.navigate("EditEnvanter", { envanter: item })}
+            />
+
+            <Button
+              title="Rafları Gör"
+              onPress={async () => {
+                try {
+                  const res = await axios.get(`http://10.33.10.55:5001/envanter/${item._id}`);
+                  navigation.navigate('RafListesi', { envanter: res.data });
+                } catch (error) {
+                  Alert.alert("Hata", "Detaylı envanter bilgisi alınamadı.");
+                }
+              }}
             />
 
             <Button
@@ -77,7 +88,6 @@ const EnvanterScreen = () => {
               onPress={() => navigation.navigate("QRScannerScreen")}
             />
 
-            {/* Silme Butonu */}
             <View style={{ marginTop: 10 }}>
               <Button
                 title="Sil"

@@ -5,7 +5,8 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 export default function EditEnvanterScreen() {
   const route = useRoute();
   const navigation = useNavigation();
-  const { _id, ad, numara, toplamRaf, rafKodlari = [] } = route.params;
+  const { envanter } = route.params;
+  const { _id, ad, numara, toplamRaf, raflar = [] } = envanter;
 
   const [envanterAdi, setEnvanterAdi] = useState(ad);
   const [envanterNumarasi, setEnvanterNumarasi] = useState(numara);
@@ -24,7 +25,7 @@ export default function EditEnvanterScreen() {
     }
 
     try {
-      const response = await fetch(`http://192.168.1.147:5001/envanter-guncelle/${_id}`, {
+      const response = await fetch(`http://localhost:5001/envanter-guncelle/${_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -75,14 +76,16 @@ export default function EditEnvanterScreen() {
 
       <Text style={styles.subTitle}>📚 Raf Kodları:</Text>
       <View style={styles.rafContainer}>
-        {rafKodlari.length === 0 ? (
-          <Text style={{ color: 'white' }}>Raf kodu bulunamadı</Text>
-        ) : (
-          rafKodlari.map((kod, index) => (
-            <Text key={index} style={styles.rafItem}>{kod}</Text>
-          ))
-        )}
-      </View>
+  {raflar.length === 0 ? (
+    <Text style={{ color: 'white' }}>Raf bulunamadı</Text>
+  ) : (
+    raflar.map((raf, index) => (
+      <Text key={index} style={styles.rafItem}>
+        {raf.kod} ({raf.kalan}/{raf.kapasite})
+      </Text>
+    ))
+  )}
+</View>
 
       <TouchableOpacity style={styles.button} onPress={handleGuncelle}>
         <Text style={styles.buttonText}>Güncelle</Text>

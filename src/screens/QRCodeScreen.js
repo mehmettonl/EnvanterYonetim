@@ -1,11 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useRoute } from '@react-navigation/native';
 
 const QRCodeScreen = () => {
   const route = useRoute();
   const { envanter } = route.params;
+
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>⚠️ QR görüntüleme şu anda sadece mobilde destekleniyor.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -27,6 +35,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   label: {
     marginTop: 20,
